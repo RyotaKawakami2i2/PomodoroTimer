@@ -1,0 +1,68 @@
+.app {
+  width: 200px;
+  min-width: 200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 小窓(documentPictureInPicture)表示中はユーザーがウィンドウ幅を変えられるため、
+   固定幅をやめてその幅いっぱいに追従させる。通常表示は上の固定幅のまま */
+.app.is-pip {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.app-header {
+  height: 24px;
+  padding: 0 var(--pad-block);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.app-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.block {
+  padding: var(--pad-block);
+  margin-bottom: var(--gap-block);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.app-footer {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--pad-block);
+}
+
+.icon-button {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  font-size: 14px;
+  flex: none;
+}
+
+.icon-button:hover {
+  background: var(--color-bg);
+}
+
+#pip-button {
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+}

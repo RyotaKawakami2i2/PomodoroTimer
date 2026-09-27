@@ -1,0 +1,24 @@
+{
+  "env": {
+    "CLAUDE_CODE_NO_FLICKER": "1"
+  },
+  "cleanupPeriodDays": 999,
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y ccstatusline@latest",
+    "padding": 0,
+    "refreshInterval": 10
+  },
+  "permissions": {
+    "allow": ["Bash(rg:*)", "Bash(jq:*)", "Bash(gh pr view:*)", "..."],
+    "deny": ["Bash(rm -rf:*)", "Bash(sudo:*)", "Read(./.env)", "..."]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [{ "type": "command", "command": "bash ~/.claude/hooks/notify-stop.sh" }]
+      }
+    ]
+  }
+}

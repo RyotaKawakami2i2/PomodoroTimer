@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pomodoro</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/timer.css">
+<link rel="stylesheet" href="css/memo_task.css">
+<link rel="stylesheet" href="css/music_player.css">
+<link rel="stylesheet" href="css/settings.css">
+</head>
+<body>
+<div class="app" id="app">
+  <header class="app-header">
+    <span class="app-title">🍅 Pomodoro</span>
+    <button id="pip-button" class="icon-button" type="button" title="小窓で常に表示" hidden>⧉</button>
+  </header>
+
+  <section class="block timer-block" id="timer-block">
+    <div class="timer-mode-label" id="timer-mode-label">作業中</div>
+    <div class="timer-display" id="timer-display" title="クリックして時間を編集">25:00</div>
+    <span class="timer-display-edit" id="timer-display-input" hidden>
+      <select id="timer-input-hours" class="timer-hm-select"></select>時間
+      <select id="timer-input-minutes" class="timer-hm-select"></select>分
+    </span>
+    <div class="timer-controls">
+      <button id="timer-toggle" class="timer-toggle-btn" type="button" title="開始">▶</button>
+      <button id="timer-reset" class="timer-reset-btn" type="button" title="リセット">⟲</button>
+    </div>
+    <button id="timer-switch-mode" class="timer-switch-link" type="button">休憩に切り替え</button>
+  </section>
+
+  <section class="block memo-task-block" id="memo-task-block">
+    <div class="task-input-row">
+      <input type="text" id="task-input" class="task-input" placeholder="新しいタスクを入力">
+      <button id="task-add" class="task-add-btn" type="button" title="タスクを追加">+</button>
+    </div>
+    <ul class="task-list" id="task-list"></ul>
+
+    <div class="task-detail" id="task-detail">
+      <div class="memo-task-label" id="memo-task-label">タスクを選択すると詳細を編集できます</div>
+      <div class="task-detail-tabs">
+        <button type="button" id="task-detail-tab-memo" class="task-detail-tab is-active">メモ</button>
+        <button type="button" id="task-detail-tab-fields" class="task-detail-tab">詳細</button>
+      </div>
+      <textarea id="memo-body" class="memo-body" placeholder="タスクを選択してメモを入力..." disabled></textarea>
+      <div class="task-detail-fields" id="task-detail-fields" hidden>
+        <div class="task-detail-row">
+          <label for="task-due-date">期限</label>
+          <input type="date" id="task-due-date" class="task-detail-date" disabled>
+        </div>
+        <div class="task-detail-row">
+          <label>見積</label>
+          <input type="number" id="task-estimate-hours" class="task-detail-hm" min="0" max="99" placeholder="0" disabled>
+          <span>時間</span>
+          <input type="number" id="task-estimate-minutes" class="task-detail-hm" min="0" max="59" placeholder="0" disabled>
+          <span>分</span>
+        </div>
+        <div class="task-detail-row">
+          <label>実績</label>
+          <input type="number" id="task-actual-hours" class="task-detail-hm" min="0" max="99" placeholder="0" disabled>
+          <span>時間</span>
+          <input type="number" id="task-actual-minutes" class="task-detail-hm" min="0" max="59" placeholder="0" disabled>
+          <span>分</span>
+          <span id="task-actual-seconds" class="task-detail-seconds">00秒</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block music-block" id="music-block">
+    <div class="music-url-row">
+      <input type="text" id="music-url-input" class="music-url-input" placeholder="YouTubeのURLを貼り付け">
+      <button id="music-add" class="music-add-btn" type="button" title="プレイリストに追加">+</button>
+    </div>
+    <div class="music-url-error" id="music-url-error" hidden>有効なYouTubeのURLを入力してください</div>
+    <div class="youtube-player-wrap" id="youtube-player-wrap" hidden>
+      <div id="youtube-player-mount"></div>
+    </div>
+    <div class="music-now-playing" id="music-now-playing">再生中の曲はありません</div>
+    <div class="music-player-error" id="music-player-error" hidden></div>
+    <div class="music-controls">
+      <button id="music-shuffle" class="music-ctrl-btn" type="button" title="シャッフル">🔀</button>
+      <button id="music-prev" class="music-ctrl-btn" type="button" title="前へ">⏮</button>
+      <button id="music-play" class="music-ctrl-btn" type="button" title="再生">▶</button>
+      <button id="music-next" class="music-ctrl-btn" type="button" title="次へ">⏭</button>
+      <button id="music-loop" class="music-ctrl-btn" type="button" title="ループなし">🔁</button>
+    </div>
+    <div class="music-volume-row">
+      <span class="music-volume-icon">🔊</span>
+      <input type="range" id="music-volume" class="music-volume-slider" min="0" max="100" value="100" title="音量">
+    </div>
+    <ul class="playlist" id="playlist"></ul>
+  </section>
+
+  <footer class="app-footer">
+    <button id="settings-button" class="icon-button" type="button" title="設定">⚙</button>
+  </footer>
+
+  <div id="settings-overlay" class="settings-overlay" hidden>
+    <div class="settings-panel" role="dialog" aria-modal="true" aria-label="設定">
+      <div class="settings-panel-header">
+        <span>設定</span>
+        <button id="settings-close" class="icon-button" type="button" title="閉じる">×</button>
+      </div>
+      <div class="settings-row">
+        <label>作業時間</label>
+        <input type="number" id="setting-work-hours" class="settings-number-input-sm" min="0" max="3">
+        <span>時間</span>
+        <input type="number" id="setting-work-minutes" class="settings-number-input-sm" min="0" max="59">
+        <span>分</span>
+      </div>
+      <div class="settings-row">
+        <label>休憩時間</label>
+        <input type="number" id="setting-break-hours" class="settings-number-input-sm" min="0" max="3">
+        <span>時間</span>
+        <input type="number" id="setting-break-minutes" class="settings-number-input-sm" min="0" max="59">
+        <span>分</span>
+      </div>
+      <div class="settings-row">
+        <label for="setting-auto-switch" class="settings-label-wide">終了後に自動で次を開始</label>
+        <input type="checkbox" id="setting-auto-switch">
+      </div>
+      <button id="backup-export" class="settings-action-btn" type="button">バックアップを書き出す</button>
+      <button id="backup-import-trigger" class="settings-action-btn" type="button">バックアップを読み込む</button>
+      <input type="file" id="backup-import-file" accept=".json,application/json" hidden>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
